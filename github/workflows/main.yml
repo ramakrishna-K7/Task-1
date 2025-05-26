@@ -21,7 +21,7 @@ pipeline {
 
         stage('Create Docker Image') {
             steps {
-                sh 'docker build -t ramakrishna-k7/app:v1 .'
+                sh 'docker build -t ramakrishna737/app:v1 .'
             }
         }
 
@@ -29,15 +29,15 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: '8ed086e0-0f2e-451d-9a4a-834b851156be') {
-                        sh 'docker push ramakrishna-k7/app:v1'
-                    }
+                    sh ' docker push ramakrishna737/app:v1'
+                   }
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 3000:3000 ramakrishna-k7/app:v1'
+                sh 'docker run -d -p 3000:3000 ramakrishna737/app:v1'
             }
         }
     }
