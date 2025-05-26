@@ -1,24 +1,33 @@
 pipeline{
-    agentany
+ agentany
     stages{
         stage(git checout the code){
             steps{
-
+                  git credentialsId: 'Github_user1', url: 'https://github.com/ramakrishna-K7/Task-1.git'
             }
         }
         stage(install dependencies){
             steps{
-
+                 sh 'npm install'
             }
         }
         stage(create docker image){
             steps{
-
+                 sh  'docker build -t ramakrishna/app:v1 .'
+            }
+        }
+        stage(docker image push){
+            steps{
+                script{
+                    withDockerRegistry(credentialsId: '8ed086e0-0f2e-451d-9a4a-834b851156be') {
+                     docker push ramakrishna/app:v1
+                    }
+                }
             }
         }
         stage(deploy){
             steps{
-
+                 'docker run -it ramakrishna:app/v1'
             }
         }
     }
