@@ -13,21 +13,21 @@ pipeline{
         }
         stage('create docker image'){
             steps{
-                 sh  'docker build -t ramakrishna/app:v1 .'
+                 sh  'docker build -t ramakrishna-k7/app:v1 .'
             }
         }
         stage('docker image push'){
             steps{
                 script{
                     withDockerRegistry(credentialsId: '8ed086e0-0f2e-451d-9a4a-834b851156be') {
-                     docker push ramakrishna/app:v1
+                    sh " docker push ramakrishna-k7/app:v1"
                     }
                 }
             }
         }
         stage('deploy'){
             steps{
-                 'docker run -it ramakrishna:app/v1'
+                 'docker run -it ramakrishna-k7:app/v1'
             }
         }
     }
