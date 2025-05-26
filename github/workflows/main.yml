@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                git credentialsId: 'Github_user1', url: 'https://github.com/ramakrishna-K7/Task-1.git'
+                git credentialsId: 'Github_user1', url: 'https://github.com/ramakrishna-k7/Task-1.git'
             }
         }
 
@@ -21,7 +21,7 @@ pipeline {
 
         stage('Create Docker Image') {
             steps {
-                sh 'docker build -t ramakrishna-k7/app:v2 .'
+                sh 'docker build -t ramakrishna737/app:v2 .'
             }
         }
 
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: '8ed086e0-0f2e-451d-9a4a-834b851156be') {
-                        sh 'docker push ramakrishna-k7/app:v2'
+                        sh 'docker push ramakrishna737/app:v2'
                     }
                 }
             }
@@ -37,7 +37,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 3000:3000 ramakrishna-k7/app:v2'
+                sh 'docker run -d -p 3000:3000 ramakrishna737/app:v2'
             }
         }
     }
