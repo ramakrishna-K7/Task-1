@@ -1,0 +1,25 @@
+pipeline{
+    agentany
+    stages{
+        stage(git checout the code){
+            steps{
+
+            }
+        }
+        stage(install dependencies){
+            steps{
+
+            }
+        }
+        stage(create docker image){
+            steps{
+
+            }
+        }
+        stage(deploy){
+            steps{
+
+            }
+        }
+    }
+}
