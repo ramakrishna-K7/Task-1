@@ -1,90 +1,80 @@
-# Task-1
 CI/CD Deployment Guide for Task-1
-
-
-
-STEP1:
-
-LAUNCH THE  EC2 INSTANCE 
-1.	AMI: Amazon Linux Kernel 5.10
-2.	Instance Type: t2.micro
-3.           EBS: 8GB
-
-STEP-2:
-
-Install docker
- yum install docker -y && systemctl start docker
-Chmod 777 //var/run/docker.sock
-
-STEP-3:
-
- Install Jenkins
-     * yum install Jenkins -y && systemctl start Jenkins
-install the plugins in Jenkins
-     * Go to the d ashboard → manage Jenkins → plugins → available plugins
-Plugins:
-    1. nodejs 
-    2. eclipse
-    3.pipeline stage view
-
-configure the plugins in global tool configuration
-    * Go to the dashboard → manage Jenkins → tools
-          Goto the nodejs installation and click install automatically select the version of 16.2.0
+This guide outlines the steps to set up a CI/CD pipeline using Jenkins and GitHub for deploying a Node.js web application with Docker.
+________________________________________
+STEP 1: Launch EC2 Instance
+•	AMI: Amazon Linux Kernel 5.10
+•	Instance Type: t2.micro
+•	EBS Volume: 8GB
+________________________________________
+STEP 2: Install Docker
+yum install docker -y
+systemctl start docker
+chmod 777 /var/run/docker.sock
+________________________________________
+STEP 3: Install Jenkins
+yum install jenkins -y
+systemctl start jenkins
+Install Jenkins Plugins
+Go to:
+•	Dashboard → Manage Jenkins → Plugins → Available Plugins
+Install the following plugins:
+1.	NodeJS
+2.	Eclipse
+3.	Pipeline Stage View
    
- Go to the jdk and click install automatically select the of java- 17.0.8.1+1
+Configure Plugins (Global Tool Configuration)
+Go to:
+•	Dashboard → Manage Jenkins → Global Tool Configuration
+•	NodeJS: Check "Install automatically" and select version 16.2.0
  
-  git 
-  select install automatically
+•	JDK: Check "Install automatically" and select version 17.0.8.1+1
+ 
+•	Git: Check "Install automatically"
 
-
-  ADD the tool credentials in jenkins
- * go to the dashboard → manage jenkins → credentials → system → globel credentials → add credentials 
- Git --
-Username: Ramakrishna-k7
-Passwd: $$$$
-Credentials id : git
-   
-Docker--
-username: ramakrishna737
-password: docker hub-password
-credentials id : docker-passwd  
-
-STEP-4:
-
-*Go to the GitHub repository the folder should be like 
+Add Credentials in Jenkins
+Go to:
+•	Dashboard → Manage Jenkins → Credentials → System → Global Credentials → Add Credentials
+Git Credentials:
+•	Username: Ramakrishna-k7
+•	Password: (GitHub password or token)
+•	Credentials ID: git
+DockerHub Credentials:
+•	Username: ramakrishna737
+•	Password: (DockerHub password)
+•	Credentials ID: docker-passwd
+________________________________________
+STEP 4: Prepare GitHub Repository
+Project structure:
 github/
 └── workflows/
-       └── main.yml          ← GitHub Actions workflow
-── Dockerfile
-── index.js
+    └── main.yml         # GitHub Actions workflow (if used)
+Dockerfile
+index.js               
+Sample Dockerfile
+![image](https://github.com/user-attachments/assets/e72a7d2a-35c4-448c-9e5d-0d1bb77d516e)
 
+ 
+Sample index.js
+![image](https://github.com/user-attachments/assets/b2b5f71f-d38b-4d0d-820f-077d2ce9882c)
 
-dockerfile
- ![image](https://github.com/user-attachments/assets/6e9f6c53-88ea-4589-adf3-e2c3a55defff)
-
-
-Normal  Index.js file 
- ![image](https://github.com/user-attachments/assets/061fd024-807b-4f91-aced-e7fd3a9cbf64)
-
-
-Add the webhook this ensure your pipeline trigger job whenever code pushed into the repository
-
-Goto the GitHub →  settings →  webhooks  →  add webhook
-
-
-
-
-STEP-3  
- write the jenkins pipeline in main.yml file which is located in Git 
-
- pipeline {
+ ________________________________________
+STEP 5: Configure Webhook
+Enable GitHub Webhook to trigger Jenkins builds:
+1.	Go to GitHub Repository → Settings → Webhooks → Add Webhook
+2.	Payload URL: http://<your-jenkins-url>/github-webhook/
+3.	Content Type: application/json
+4.	Trigger: Only Push events
+________________________________________
+STEP 6: Jenkins Pipeline Script
+Use this script in your Jenkins Pipeline job configuration:
+pipeline {
     agent any
-    tools{
+
+    tools {
         jdk 'java17'
         nodejs 'node18'
-        
     }
-    
+
     stages {
         stage('Git Checkout') {
             steps {
@@ -107,7 +97,7 @@ STEP-3
         stage('Push Docker Image') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: '8ed086e0-0f2e-451d-9a4a-834b851156be') {
+                    withDockerRegistry(credentialsId: 'docker-passwd') {
                         sh 'docker push ramakrishna-k7/app:v1'
                     }
                 }
@@ -121,10 +111,8 @@ STEP-3
         }
     }
 }
-![image](https://github.com/user-attachments/assets/702ddb97-e8ed-457b-a2a8-8e83e0d29c77)
 
+![image](https://github.com/user-attachments/assets/55fb7c43-9a87-4045-b332-767491d09cc1)
 
-
-
-
-    
+________________________________________
+ 
