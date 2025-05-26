@@ -3,6 +3,7 @@ pipeline {
     tools{
         jdk 'java17'
         nodejs 'node18'
+        git 'default'
     }
     
     stages {
